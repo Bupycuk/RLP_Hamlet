@@ -1,7 +1,9 @@
-mods = GLOBAL.rawget(GLOBAL, "mods")
+_G = GLOBAL
+
+mods = _G.rawget(_G, "mods")
 if not mods then
 	mods = {}
-	GLOBAL.rawset(GLOBAL, "mods", mods)
+	_G.rawset(_G, "mods", mods)
 end
 mods.RussianLanguagePack = {}
 local t = mods.RussianLanguagePack
@@ -11,35 +13,36 @@ t.modinfo = modinfo
 t.StorePath = MODROOT--"scripts/languages/"
 t.UpdateLogFileName = "updatelog.txt"
 t.MainPOfilename = "russian.po"
+t.DeclensionsFile = "declensions.po"
 t.ROG_POfilename = "ROG.po"
 t.SW_POfilename = "SW.po"
 t.UpdatePeriod = {"OncePerLaunch","OncePerDay","OncePerWeek","OncePerMonth","Never"}
-t.SteamURL = "http://steamcommunity.com/sharedfiles/filedetails/?id=207427039"
+t.SteamURL = "https://steamcommunity.com/sharedfiles/filedetails/?id=1566290108"
 
-io = GLOBAL.io
-STRINGS = GLOBAL.STRINGS
-tonumber = GLOBAL.tonumber
-tostring = GLOBAL.tostring
-assert = GLOBAL.assert
-rawget = GLOBAL.rawget
-require = GLOBAL.require
-dumptable = GLOBAL.dumptable
-GetPlayer = GLOBAL.GetPlayer
-
-
+io = _G.io
+STRINGS = _G.STRINGS
+tonumber = _G.tonumber
+tostring = _G.tostring
+assert = _G.assert
+rawget = _G.rawget
+require = _G.require
+dumptable = _G.dumptable
+GetPlayer = _G.GetPlayer
 
 
 
 
-t.ROG_Installed = rawget(GLOBAL,"REIGN_OF_GIANTS") and GLOBAL.IsDLCEnabled and GLOBAL.IsDLCEnabled(GLOBAL.REIGN_OF_GIANTS)
-t.SW_Installed = rawget(GLOBAL,"CAPY_DLC") and GLOBAL.IsDLCEnabled and GLOBAL.IsDLCEnabled(GLOBAL.CAPY_DLC)
+
+
+t.ROG_Installed = rawget(_G,"REIGN_OF_GIANTS") and _G.IsDLCEnabled and _G.IsDLCEnabled(_G.REIGN_OF_GIANTS)
+t.SW_Installed = rawget(_G,"CAPY_DLC") and _G.IsDLCEnabled and _G.IsDLCEnabled(_G.CAPY_DLC)
 
 
 
-function GLOBAL.escapeR(str) --Удаляет \r из конца строки. Нужна для строк, загружаемых в юниксе.
+function _G.escapeR(str) --Удаляет \r из конца строки. Нужна для строк, загружаемых в юниксе.
 	if string.sub(str,#str)=="\r" then return string.sub(str,1,#str-1) else return str end
 end
-local escapeR=GLOBAL.escapeR
+local escapeR=_G.escapeR
 
 
 
@@ -67,32 +70,32 @@ if t.StorePath and t.StorePath~=MODROOT then
 		f:close()
 	end
 	--Проверяем po файл
-	if GLOBAL.kleifileexists(MODROOT..t.MainPOfilename)
-	   and (not GLOBAL.kleifileexists(t.StorePath..t.MainPOfilename) or GetPoFileVersion(t.StorePath..t.MainPOfilename)~=modinfo.version) then
+	if _G.kleifileexists(MODROOT..t.MainPOfilename)
+	   and (not _G.kleifileexists(t.StorePath..t.MainPOfilename) or GetPoFileVersion(t.StorePath..t.MainPOfilename)~=modinfo.version) then
 		copyfile(MODROOT..t.MainPOfilename,t.StorePath..t.MainPOfilename)
 	end
 
 	if t.ROG_Installed or t.SW_Installed then
 		-- Проверяем ROG po файл
-		if GLOBAL.kleifileexists(MODROOT..t.ROG_POfilename)
-		   and (not GLOBAL.kleifileexists(t.StorePath..t.ROG_POfilename) or GetPoFileVersion(t.StorePath..t.ROG_POfilename)~=modinfo.version) then
+		if _G.kleifileexists(MODROOT..t.ROG_POfilename)
+		   and (not _G.kleifileexists(t.StorePath..t.ROG_POfilename) or GetPoFileVersion(t.StorePath..t.ROG_POfilename)~=modinfo.version) then
 			copyfile(MODROOT..t.ROG_POfilename,t.StorePath..t.ROG_POfilename)
 		end
 		-- Проверяем SW po файл
-		if GLOBAL.kleifileexists(MODROOT..t.SW_POfilename)
-		   and (not GLOBAL.kleifileexists(t.StorePath..t.SW_POfilename) or GetPoFileVersion(t.StorePath..t.SW_POfilename)~=modinfo.version) then
+		if _G.kleifileexists(MODROOT..t.SW_POfilename)
+		   and (not _G.kleifileexists(t.StorePath..t.SW_POfilename) or GetPoFileVersion(t.StorePath..t.SW_POfilename)~=modinfo.version) then
 			copyfile(MODROOT..t.SW_POfilename,t.StorePath..t.SW_POfilename)
 		end
 	end
 
 
 	--Проверяем лог файл
-	if GLOBAL.kleifileexists(MODROOT..t.UpdateLogFileName)
-	   and not GLOBAL.kleifileexists(t.StorePath..t.UpdateLogFileName) then
+	if _G.kleifileexists(MODROOT..t.UpdateLogFileName)
+	   and not _G.kleifileexists(t.StorePath..t.UpdateLogFileName) then
 		copyfile(MODROOT..t.UpdateLogFileName,t.StorePath..t.UpdateLogFileName)
 	end
 	--Финальная проверка, если вдруг не создался файл po
-	if not GLOBAL.kleifileexists(t.StorePath..t.MainPOfilename) then
+	if not _G.kleifileexists(t.StorePath..t.MainPOfilename) then
 		t.StorePath=MODROOT
 	end
 end
@@ -109,31 +112,31 @@ function ApplyRussianFonts()
 				 "belisaplumilla50__ru.zip",
 				 "belisaplumilla100__ru.zip",
 				 "buttonfont__ru.zip"}
-	if GLOBAL.rawget(GLOBAL,"TALKINGFONT_WATHGRITHR") then
+	if _G.rawget(_G,"TALKINGFONT_WATHGRITHR") then
 		table.insert(RusFontsFileNames,"talkingfont_wathgrithr__ru.zip")
 	end
 	--ЭТАП ВЫГРУЗКИ: Вначале выгружаем шрифты, если они были загружены
 
 	--Возвращаем в глобальные переменные шрифтов родные алиасы, которые точно работают,
 	--чтобы не выкинуло при перезагрузке
-	GLOBAL.DEFAULTFONT = "opensans"
-	GLOBAL.DIALOGFONT = "opensans"
-	GLOBAL.TITLEFONT = "bp100"
-	GLOBAL.UIFONT = "bp50"
-	GLOBAL.BUTTONFONT="buttonfont"
-	GLOBAL.NUMBERFONT = "stint-ucr"
-	GLOBAL.TALKINGFONT = "talkingfont"
-	if GLOBAL.rawget(GLOBAL,"TALKINGFONT_WATHGRITHR") then
-		GLOBAL.TALKINGFONT_WATHGRITHR = "talkingfont_wathgrithr"
+	_G.DEFAULTFONT = "opensans"
+	_G.DIALOGFONT = "opensans"
+	_G.TITLEFONT = "bp100"
+	_G.UIFONT = "bp50"
+	_G.BUTTONFONT="buttonfont"
+	_G.NUMBERFONT = "stint-ucr"
+	_G.TALKINGFONT = "talkingfont"
+	if _G.rawget(_G,"TALKINGFONT_WATHGRITHR") then
+		_G.TALKINGFONT_WATHGRITHR = "talkingfont_wathgrithr"
 	end
-	GLOBAL.SMALLNUMBERFONT = "stint-small"
-	GLOBAL.BODYTEXTFONT = "stint-ucr"
+	_G.SMALLNUMBERFONT = "stint-small"
+	_G.BODYTEXTFONT = "stint-ucr"
 
 	--Выгружаем шрифт, и префаб под него
 	for i,FileName in ipairs(RusFontsFileNames) do
-		GLOBAL.TheSim:UnloadFont("rusfont"..tostring(i))
+		_G.TheSim:UnloadFont("rusfont"..tostring(i))
 	end
-	GLOBAL.TheSim:UnloadPrefabs({"rusfonts_"..modname})
+	_G.TheSim:UnloadPrefabs({"rusfonts_"..modname})
 
 
 	--ЭТАП ЗАГРУЗКИ: Загружаем шрифты по новой
@@ -141,30 +144,30 @@ function ApplyRussianFonts()
 	--Формируем список ассетов
 	local RusFontsAssets={}
 	for i,FileName in ipairs(RusFontsFileNames) do 
-		table.insert(RusFontsAssets,GLOBAL.Asset("FONT",MODROOT.."fonts/"..FileName))
+		table.insert(RusFontsAssets,_G.Asset("FONT",MODROOT.."fonts/"..FileName))
 	end
 
 	--Создаём префаб, регистрируем его и загружаем
-	local RusFontsPrefab=GLOBAL.Prefab("common/rusfonts_"..modname, nil, RusFontsAssets)
-	GLOBAL.RegisterPrefabs(RusFontsPrefab)
-	GLOBAL.TheSim:LoadPrefabs({"rusfonts_"..modname})
+	local RusFontsPrefab=_G.Prefab("common/rusfonts_"..modname, nil, RusFontsAssets)
+	_G.RegisterPrefabs(RusFontsPrefab)
+	_G.TheSim:LoadPrefabs({"rusfonts_"..modname})
 
 	--Формируем список связанных с файлами алиасов
 	for i,FileName in ipairs(RusFontsFileNames) do
-		GLOBAL.TheSim:LoadFont(MODROOT.."fonts/"..FileName, "rusfont"..tostring(i))
+		_G.TheSim:LoadFont(MODROOT.."fonts/"..FileName, "rusfont"..tostring(i))
 	end
 	--Вписываем в глобальные переменные шрифтов наши алиасы
-	GLOBAL.DEFAULTFONT = "rusfont4"
-	GLOBAL.DIALOGFONT = "rusfont4"
-	GLOBAL.TITLEFONT = "rusfont6"
-	GLOBAL.UIFONT = "rusfont5"
-	GLOBAL.BUTTONFONT= "rusfont7"
-	GLOBAL.NUMBERFONT = "rusfont2"
-	GLOBAL.TALKINGFONT = "rusfont1"
-	GLOBAL.SMALLNUMBERFONT = "rusfont3"
-	GLOBAL.BODYTEXTFONT = "rusfont2"
-	if GLOBAL.rawget(GLOBAL,"TALKINGFONT_WATHGRITHR") then
-		GLOBAL.TALKINGFONT_WATHGRITHR = "rusfont8"
+	_G.DEFAULTFONT = "rusfont4"
+	_G.DIALOGFONT = "rusfont4"
+	_G.TITLEFONT = "rusfont6"
+	_G.UIFONT = "rusfont5"
+	_G.BUTTONFONT= "rusfont7"
+	_G.NUMBERFONT = "rusfont2"
+	_G.TALKINGFONT = "rusfont1"
+	_G.SMALLNUMBERFONT = "rusfont3"
+	_G.BODYTEXTFONT = "rusfont2"
+	if _G.rawget(_G,"TALKINGFONT_WATHGRITHR") then
+		_G.TALKINGFONT_WATHGRITHR = "rusfont8"
 	end
 
 end
@@ -173,27 +176,27 @@ end
 --Проверяем версию по файла, и если она не соответствует текущей версии, то отключаем перевод
 --[[local poversion=GetPoFileVersion(t.StorePath..t.MainPOfilename)
 if poversion~=modinfo.version then
-	local OldStart=GLOBAL.Start --Переопределяем функцию, после выполнения которой можно будет вывести попап.
+	local OldStart=_G.Start --Переопределяем функцию, после выполнения которой можно будет вывести попап.
 	function Start() 
 		OldStart()
 		ApplyRussianFonts()
 		local a,b="/","\\"
-		if GLOBAL.PLATFORM == "NACL" or GLOBAL.PLATFORM == "PS4" or GLOBAL.PLATFORM == "LINUX_STEAM" or GLOBAL.PLATFORM == "OSX_STEAM" then
+		if _G.PLATFORM == "NACL" or _G.PLATFORM == "PS4" or _G.PLATFORM == "LINUX_STEAM" or _G.PLATFORM == "OSX_STEAM" then
 			a,b=b,a
 		end
-		local text="Версия игры: "..modinfo.version..", версия PO файла: "..poversion.."\nПуть: "..string.gsub(GLOBAL.CWD..t.StorePath,a,b)..t.MainPOfilename.."\nПеревод текста отключён."
+		local text="Версия игры: "..modinfo.version..", версия PO файла: "..poversion.."\nПуть: "..string.gsub(_G.CWD..t.StorePath,a,b)..t.MainPOfilename.."\nПеревод текста отключён."
 		local PopupDialogScreen = require "screens/popupdialog"
-	        GLOBAL.TheFrontEnd:PushScreen(PopupDialogScreen("Неверная версия PO файла", text,
-			{{text="Понятно", cb = function() GLOBAL.TheFrontEnd:PopScreen() end}}))
+	        _G.TheFrontEnd:PushScreen(PopupDialogScreen("Неверная версия PO файла", text,
+			{{text="Понятно", cb = function() _G.TheFrontEnd:PopScreen() end}}))
 	end
-	GLOBAL.Start=Start
+	_G.Start=Start
 	return
 end]]
 
 
 --Функция проверяет файл language.lua на наличие подключения po файла и старых версий русификации
 function language_lua_has_rusification(filename)
-	if not GLOBAL.kleifileexists(filename) then return false end --Нет файла? Нет проблем
+	if not _G.kleifileexists(filename) then return false end --Нет файла? Нет проблем
 
 
 	local f = assert(io.open(filename,"r")) --Читаем весь файл в буфер
@@ -239,27 +242,27 @@ end
 local languageluapath ="scripts/languages/language.lua"
 
 if language_lua_has_rusification(languageluapath) then --Если в language.lua подключается русификация
-	local OldStart=GLOBAL.Start --Переопределяем функцию, после выполнения которой можно будет вывести попап и перезагрузиться
+	local OldStart=_G.Start --Переопределяем функцию, после выполнения которой можно будет вывести попап и перезагрузиться
 	function Start() 
 		OldStart()
 		ApplyRussianFonts()
 		local a,b="/","\\"
-		if GLOBAL.PLATFORM == "NACL" or GLOBAL.PLATFORM == "PS4" or GLOBAL.PLATFORM == "LINUX_STEAM" or GLOBAL.PLATFORM == "OSX_STEAM" then
+		if _G.PLATFORM == "NACL" or _G.PLATFORM == "PS4" or _G.PLATFORM == "LINUX_STEAM" or _G.PLATFORM == "OSX_STEAM" then
 			a,b=b,a
 		end
 		local text="В файле "..string.gsub("data/"..languageluapath,a,b).."\nнайдено подключение другой локализации.\nЭто подключение было деактивировано."
 		local PopupDialogScreen = require "screens/popupdialog"
-	        GLOBAL.TheFrontEnd:PushScreen(PopupDialogScreen("Обнаружена посторонняя локализация", text,
-			{{text="Понятно", cb = function() GLOBAL.TheFrontEnd:PopScreen() GLOBAL.SimReset() end}}))
+	        _G.TheFrontEnd:PushScreen(PopupDialogScreen("Обнаружена посторонняя локализация", text,
+			{{text="Понятно", cb = function() _G.TheFrontEnd:PopScreen() _G.SimReset() end}}))
 	end
-	GLOBAL.Start=Start
+	_G.Start=Start
 end
 
 --Переопределяем функцию закрытия консоли
 local OldClose
 function NewClose()
-	GLOBAL.SetPause(false)
-	GLOBAL.TheInput:EnableDebugToggle(true)
+	_G.SetPause(false)
+	_G.TheInput:EnableDebugToggle(true)
 	TheFrontEnd:PopScreen()
 	--Автоматически скрываем достающий лог (без Ctrl+L)
 	TheFrontEnd:HideConsoleLog()
@@ -303,8 +306,8 @@ Assets={
 
 
 
-GLOBAL.getmetatable(GLOBAL.TheSim).__index.UnregisterAllPrefabs = (function()
-	local oldUnregisterAllPrefabs = GLOBAL.getmetatable(GLOBAL.TheSim).__index.UnregisterAllPrefabs
+_G.getmetatable(_G.TheSim).__index.UnregisterAllPrefabs = (function()
+	local oldUnregisterAllPrefabs = _G.getmetatable(_G.TheSim).__index.UnregisterAllPrefabs
 	return function(self, ...)
 		oldUnregisterAllPrefabs(self, ...)
 		ApplyRussianFonts()
@@ -314,25 +317,25 @@ end)()
 ApplyRussianFonts()
 
 --Вставляем функцию, подключающую русские шрифты
-local OldRegisterPrefabs=GLOBAL.ModManager.RegisterPrefabs --Подменяем функцию,в которой нужно подгрузить шрифты и исправить глобальные шрифтовые константы
+local OldRegisterPrefabs=_G.ModManager.RegisterPrefabs --Подменяем функцию,в которой нужно подгрузить шрифты и исправить глобальные шрифтовые константы
 local function NewRegisterPrefabs(self)
 	OldRegisterPrefabs(self)
 	ApplyRussianFonts()
-	GLOBAL.TheFrontEnd.consoletext:SetFont(GLOBAL.BODYTEXTFONT) --Нужно, чтобы шрифт в консоли не слетал
-	GLOBAL.TheFrontEnd.consoletext:SetRegionSize(900, 404) --Чуть-чуть увеличил по вертикали, чтобы не обрезало буквы в нижней строке
+	_G.TheFrontEnd.consoletext:SetFont(_G.BODYTEXTFONT) --Нужно, чтобы шрифт в консоли не слетал
+	_G.TheFrontEnd.consoletext:SetRegionSize(900, 404) --Чуть-чуть увеличил по вертикали, чтобы не обрезало буквы в нижней строке
 end
-GLOBAL.ModManager.RegisterPrefabs=NewRegisterPrefabs
+_G.ModManager.RegisterPrefabs=NewRegisterPrefabs
 
 --Необходимо подключить русские шрифты в окне создания нового мира
 AddClassPostConstruct("screens/worldgenscreen", function(self)
 	ApplyRussianFonts()
 	--Обновляем два текстовых элемента, которые успели инициализироваться
-	self.worldgentext:SetFont(GLOBAL.TITLEFONT)
-	self.flavourtext:SetFont(GLOBAL.UIFONT)
+	self.worldgentext:SetFont(_G.TITLEFONT)
+	self.flavourtext:SetFont(_G.UIFONT)
 end)
 
 
-GLOBAL.RusUpdatePeriod={"OncePerLaunch","OncePerDay","OncePerWeek","OncePerMonth","Never"}
+_G.RusUpdatePeriod={"OncePerLaunch","OncePerDay","OncePerWeek","OncePerMonth","Never"}
 
 function t.ChaptersListInit()
 	local tbl={
@@ -536,8 +539,8 @@ function rebuildname(str1,action,objectname)
 end
 
 
-GLOBAL.testname=function(name, key)
-	if name and (not key) and type(name)=="string" and GLOBAL.rawget(STRINGS.NAMES,name:upper()) then key=name:upper() name=STRINGS.NAMES[key] end
+_G.testname=function(name, key)
+	if name and (not key) and type(name)=="string" and _G.rawget(STRINGS.NAMES,name:upper()) then key=name:upper() name=STRINGS.NAMES[key] end
 	local output = "Идти к "..rebuildname(name,"WALKTO", key).."\n"
 	output = output .. "Осмотреть "..rebuildname(name,"DEFAULTACTION", key)
 	print("\n"..output.."\n")
@@ -577,7 +580,7 @@ function t.testnames(fileorlist, outputfilename)
 				end
 			end
 			if not foundgender then f:write("МУЖСКОЙ (по умолчанию)\n") end
-			f:write(GLOBAL.testname(STRINGS.NAMES[key], key).."\n\n")
+			f:write(_G.testname(STRINGS.NAMES[key], key).."\n\n")
 		else
 			f:write("ОШИБКА. НЕ НАЙДЕН КЛЮЧ\n\n")
 		end
@@ -683,8 +686,8 @@ t.ShouldBeCapped = {} --Таблица, в которой находится список названий, первое сло
 --Загружает список имён, которые должны начинаться с заглавной буквы. Список должен состоять из названий префабов.
 function t.LoadCappedNames(data)
 	t.ShouldBeCapped={}
-	local filename = t.StorePath..t.MainPOfilename
-	if (data and #data==0) or not GLOBAL.kleifileexists(filename) then return nil end
+	local filename = t.StorePath..t.DeclensionsFile
+	if (data and #data==0) or not _G.kleifileexists(filename) then return nil end
 	local insection=false
 	local function parseline(line)
 		line=escapeR(line)
@@ -728,8 +731,8 @@ function t.LoadNamesGender(data)
 	t.NamesGender["it"]={}
 	t.NamesGender["plural"]={}
 	t.NamesGender["plural2"]={}
-	local filename = t.StorePath..t.MainPOfilename
-	if (data and #data==0) or not GLOBAL.kleifileexists(filename) then return nil end
+	local filename = t.StorePath..t.DeclensionsFile
+	if (data and #data==0) or not _G.kleifileexists(filename) then return nil end
 	local insection=false
 	local part=nil
 	local function parseline(line)
@@ -771,9 +774,9 @@ function t.LoadFixedNames(BuildErrorLog, data)
 	t.RussianNames={}
 	t.ActionsToSave={}
 
-	local filename = t.StorePath..t.MainPOfilename
+	local filename = t.StorePath..t.DeclensionsFile
 
-	if (data and #data==0) or not GLOBAL.kleifileexists(filename) then return nil end
+	if (data and #data==0) or not _G.kleifileexists(filename) then return nil end
 
 	local action=nil
 	local predcessorword=""
@@ -793,7 +796,7 @@ function t.LoadFixedNames(BuildErrorLog, data)
 				elseif action=="KILL" then
 					predcessorword="Он был убит"
 				else --все другие действия
-					predcessorword=GLOBAL.LanguageTranslator.languages["ru"]["STRINGS.ACTIONS."..action] or ""
+					predcessorword=_G.LanguageTranslator.languages["ru"]["STRINGS.ACTIONS."..action] or ""
 				end
 				t.ActionsToSave[action]={} --создаём таблицу в текущем виде действий.
 			end
@@ -805,8 +808,8 @@ function t.LoadFixedNames(BuildErrorLog, data)
 				if not STRINGS.NAMES[path] and not errorlog[path] then
 					f:write("Не найден предмет "..tostring(path).."\n")
 					errorlog[path]=true
-				elseif GLOBAL.LanguageTranslator.languages["ru"]["STRINGS.NAMES."..path]~=original and not errorlog[path] then
-					f:write("На notabenoid изменилось название предмета "..tostring(original).." ("..tostring(path)..")".." на "..GLOBAL.LanguageTranslator.languages["ru"]["STRINGS.NAMES."..path].."\n")
+				elseif _G.LanguageTranslator.languages["ru"]["STRINGS.NAMES."..path]~=original and not errorlog[path] then
+					f:write("На notabenoid изменилось название предмета "..tostring(original).." ("..tostring(path)..")".." на ".._G.LanguageTranslator.languages["ru"]["STRINGS.NAMES."..path].."\n")
 					errorlog[path]=true
 				end
 			end
@@ -844,13 +847,13 @@ end
 
 
 --Делаем бекап названия версии игры
-local UPDATENAME=GLOBAL.STRINGS.UI.MAINSCREEN.UPDATENAME
+local UPDATENAME=_G.STRINGS.UI.MAINSCREEN.UPDATENAME
 
 --Загружаем русификацию
 LoadPOFile(t.StorePath..t.MainPOfilename, "ru")
 
 --Восстанавливаем название версии игры из бекапа
-GLOBAL.LanguageTranslator.languages["ru"]["STRINGS.UI.MAINSCREEN.UPDATENAME"]=UPDATENAME
+_G.LanguageTranslator.languages["ru"]["STRINGS.UI.MAINSCREEN.UPDATENAME"]=UPDATENAME
 
 
 --Подгружает реплики персонажей для ROG и SW
@@ -858,15 +861,15 @@ function ApplyROG_SWRussification()
 	if t.ROG_Installed or t.SW_Installed then
 		--Делаем бэкап строк перевода
 		local rustemp={}
-		for i,v in pairs(GLOBAL.LanguageTranslator.languages["ru"]) do
+		for i,v in pairs(_G.LanguageTranslator.languages["ru"]) do
 			rustemp[i]=v
 		end
 		--Загружаем PO для ROG
 		LoadPOFile(t.StorePath..t.ROG_POfilename, "ru")
 		--Объединяем строки перевода
 		for i,v in pairs(rustemp) do
-			if not GLOBAL.LanguageTranslator.languages["ru"][i] then
-				GLOBAL.LanguageTranslator.languages["ru"][i]=v
+			if not _G.LanguageTranslator.languages["ru"][i] then
+				_G.LanguageTranslator.languages["ru"][i]=v
 			end
 		end
 		rustemp=nil
@@ -874,15 +877,15 @@ function ApplyROG_SWRussification()
 		if t.SW_Installed then
 			--Снова делаем бэкап строк перевода
 			local rustemp={}
-			for i,v in pairs(GLOBAL.LanguageTranslator.languages["ru"]) do
+			for i,v in pairs(_G.LanguageTranslator.languages["ru"]) do
 				rustemp[i]=v
 			end
 			--Загружаем PO для SW
 			LoadPOFile(t.StorePath..t.SW_POfilename, "ru")
 			--Объединяем строки перевода
 			for i,v in pairs(rustemp) do
-				if not GLOBAL.LanguageTranslator.languages["ru"][i] then
-					GLOBAL.LanguageTranslator.languages["ru"][i]=v
+				if not _G.LanguageTranslator.languages["ru"][i] then
+					_G.LanguageTranslator.languages["ru"][i]=v
 				end
 			end
 			rustemp=nil
@@ -973,14 +976,14 @@ end
 
 --Объявляем таблицу особых тегов, присущих персонажам.
 --Порядковый номер тега определяет его приоритет.
-GLOBAL.CharacterInherentTags={}
-for char in pairs(GLOBAL.GetActiveCharacterList()) do
-	GLOBAL.CharacterInherentTags[char]={}
+_G.CharacterInherentTags={}
+for char in pairs(_G.GetActiveCharacterList()) do
+	_G.CharacterInherentTags[char]={}
 end
 
 
 --!!!ВРЕМЕННО, РАЗРАБОТЧИКИ ЗАБЫЛИ ДОБАВИТЬ ЭТО
-if not table.contains(GLOBAL.CHARACTER_GENDERS.FEMALE, "walani") then table.insert(GLOBAL.CHARACTER_GENDERS.FEMALE, "walani") end
+if not table.contains(_G.CHARACTER_GENDERS.FEMALE, "walani") then table.insert(_G.CHARACTER_GENDERS.FEMALE, "walani") end
 
 --Функция ищет в реплике спец-тэги, оформленные в [] и выбирает нужный, соответствующий персонажу char
 --Варианты с разным переводом для разного пола оформляются в [] и разделяются символом |.
@@ -1036,7 +1039,7 @@ function t.ParseTranslationTags(message, char, talker, optionaltags)
 			end
 		end
 		str=tags and (tags[char] --сначала ищем по имени
-			or SelectByCustomTags(GLOBAL.CharacterInherentTags[char]) --потом по особым тегам персонажа
+			or SelectByCustomTags(_G.CharacterInherentTags[char]) --потом по особым тегам персонажа
 			or tags[gender] --потом пытаемся выбрать по полу персонажа
 			or SelectByCustomTags(optionaltags) --потом ищем, есть ли в вариантах дополнительные теги
 			or tags["default"] --или берём дефолтный тег
@@ -1070,13 +1073,13 @@ function t.ParseTranslationTags(message, char, talker, optionaltags)
 		char=char:lower()
 		if char=="generic" then char="wilson" end
 
-		if GLOBAL.rawget(GLOBAL,"CHARACTER_GENDERS") then
-			if GLOBAL.CHARACTER_GENDERS.MALE and table.contains(GLOBAL.CHARACTER_GENDERS.MALE, char) then gender="he"
-			elseif GLOBAL.CHARACTER_GENDERS.FEMALE and table.contains(GLOBAL.CHARACTER_GENDERS.FEMALE, char) then gender="she"
-			elseif GLOBAL.CHARACTER_GENDERS.ROBOT and table.contains(GLOBAL.CHARACTER_GENDERS.ROBOT, char) then gender="he"
-			elseif GLOBAL.CHARACTER_GENDERS.IT and table.contains(GLOBAL.CHARACTER_GENDERS.IT, char) then gender="it"
-			elseif GLOBAL.CHARACTER_GENDERS.NEUTRAL and table.contains(GLOBAL.CHARACTER_GENDERS.IT, char) then gender="neutral"
-			elseif GLOBAL.CHARACTER_GENDERS.PLURAL and table.contains(GLOBAL.CHARACTER_GENDERS.PLURAL, char) then gender="plural" end
+		if _G.rawget(_G,"CHARACTER_GENDERS") then
+			if _G.CHARACTER_GENDERS.MALE and table.contains(_G.CHARACTER_GENDERS.MALE, char) then gender="he"
+			elseif _G.CHARACTER_GENDERS.FEMALE and table.contains(_G.CHARACTER_GENDERS.FEMALE, char) then gender="she"
+			elseif _G.CHARACTER_GENDERS.ROBOT and table.contains(_G.CHARACTER_GENDERS.ROBOT, char) then gender="he"
+			elseif _G.CHARACTER_GENDERS.IT and table.contains(_G.CHARACTER_GENDERS.IT, char) then gender="it"
+			elseif _G.CHARACTER_GENDERS.NEUTRAL and table.contains(_G.CHARACTER_GENDERS.IT, char) then gender="neutral"
+			elseif _G.CHARACTER_GENDERS.PLURAL and table.contains(_G.CHARACTER_GENDERS.PLURAL, char) then gender="plural" end
 		end
 		--Если это Веббер и он говорит сам о себе, то это множественное число
 		if char=="webber" and (not talker or talker:lower()==char) then gender="plural" end
@@ -1122,18 +1125,18 @@ function FixQuotes(str)
 			end
 		end
 	end
-	return(string.char(GLOBAL.unpack(str)))
+	return(string.char(_G.unpack(str)))
 end
 
 
 
 
-for i,v in pairs(GLOBAL.LanguageTranslator.languages["ru"]) do
-	GLOBAL.LanguageTranslator.languages["ru"][i]=FixQuotes(GLOBAL.LanguageTranslator.languages["ru"][i])
+for i,v in pairs(_G.LanguageTranslator.languages["ru"]) do
+	_G.LanguageTranslator.languages["ru"][i]=FixQuotes(_G.LanguageTranslator.languages["ru"][i])
 end
 
 --[[	local f=io.open(MODROOT.."test.txt","w")
-for i,v in pairs(GLOBAL.LanguageTranslator.languages["ru"]) do
+for i,v in pairs(_G.LanguageTranslator.languages["ru"]) do
 	if string.sub(i,1,15)=="STRINGS.MAXWELL" then
 		local a,b,c,d
 		a=t.ParseTranslationTags(v, "wilson")
@@ -1174,8 +1177,8 @@ for i,v in pairs(STRINGS.UI.CUSTOMIZATIONSCREEN.PRESETLEVELS) do table.insert(ma
 for i,v in pairs(STRINGS.UI.CUSTOMIZATIONSCREEN.PRESETLEVELDESC) do table.insert(mappresets.desc,v) end
 
 --Проверяем наличие пустых строк, которые специальным образом маркируются на Notabenoid
-for i,v in pairs(GLOBAL.LanguageTranslator.languages["ru"]) do
-	if v=="<пусто>" then GLOBAL.LanguageTranslator.languages["ru"][i]="" end
+for i,v in pairs(_G.LanguageTranslator.languages["ru"]) do
+	if v=="<пусто>" then _G.LanguageTranslator.languages["ru"][i]="" end
 end
 
 
@@ -1188,7 +1191,7 @@ end
 
 
 --Перегоняем перевод в STRINGS
-GLOBAL.TranslateStringTable(GLOBAL.STRINGS)
+_G.TranslateStringTable(_G.STRINGS)
 
 t.LoadCappedNames() --Загружаем имена, которые должны оставаться заглавными
 
@@ -1303,7 +1306,7 @@ end
 
 
 
-local GetAdjectiveOld=GLOBAL.EntityScript["GetAdjective"]
+local GetAdjectiveOld=_G.EntityScript["GetAdjective"]
 --Новая версия функции, выдающей качество предмета
 function GetAdjectiveNew(self)
 	local str=GetAdjectiveOld(self)
@@ -1318,7 +1321,7 @@ function GetAdjectiveNew(self)
 	end
 	return str
 end
-GLOBAL.EntityScript["GetAdjective"]=GetAdjectiveNew --подменяем функцию, выводящую качества продуктов
+_G.EntityScript["GetAdjective"]=GetAdjectiveNew --подменяем функцию, выводящую качества продуктов
 
 
 
@@ -1344,14 +1347,14 @@ AddClassPostConstruct("widgets/hoverer", function(self)
 	end
 end)
 
-GLOBAL.a = ""
+_G.a = ""
 
-local GetDisplayNameOld=GLOBAL.EntityScript["GetDisplayName"] --сохраняем старую функцию, выводящую название предмета
+local GetDisplayNameOld=_G.EntityScript["GetDisplayName"] --сохраняем старую функцию, выводящую название предмета
 function GetDisplayNameNew(self, act) --Подмена функции, выводящей название предмета. В ней реализовано склонение в зависимости от действия (переменная аct)
 	local name=GetDisplayNameOld(self)
 	local player = GetPlayer()
 	print("GetDisplayNameNew",name, act and act.action.id)
-	GLOBAL.a = self
+	_G.a = self
 --	if not player then return name end --Если не удалось получить instance игрока, то возвращаем имя на англ. и выходим
 	
 --	local act=player.components.playercontroller:GetLeftMouseAction() --Получаем текущее действие
@@ -1431,7 +1434,7 @@ function GetDisplayNameNew(self, act) --Подмена функции, выводящей название пред
 	if act and act=="SLEEPIN" and name then name="в "..name end --Особый случай для "спать в палатке" и "спать в навесе для сиесты"
     return name
 end
-GLOBAL.EntityScript["GetDisplayName"]=GetDisplayNameNew --подменяем на новую
+_G.EntityScript["GetDisplayName"]=GetDisplayNameNew --подменяем на новую
 
 
 
@@ -1638,9 +1641,9 @@ AddClassPostConstruct("widgets/recipepopup", function(self) --Уменьшаем шрифт оп
 				self:OldRefresh(...)
 				if not self.name then return end
 				local Text = require "widgets/text"
-		    local tmp = self.contents:AddChild(Text(GLOBAL.UIFONT, 36))
+		    local tmp = self.contents:AddChild(Text(_G.UIFONT, 36))
 			      tmp:SetPosition(320, 142, 0)
-			      tmp:SetHAlign(GLOBAL.ANCHOR_MIDDLE)
+			      tmp:SetHAlign(_G.ANCHOR_MIDDLE)
 			      tmp:Hide()
 		        tmp:SetString(self.name:GetString())
 			    local desiredw = self.name:GetRegionSize()
@@ -1760,7 +1763,7 @@ AddClassPostConstruct("widgets/loadingwidget", function(self)
 	function self:KeepAlive(...)
 		local res = OldKeepAlive(self, ...)
 		if self.loading_widget then
-			self.loading_widget:SetFont(GLOBAL.UIFONT)
+			self.loading_widget:SetFont(_G.UIFONT)
 			if not self.loading_widget.RLPInitialized then
 				self.loading_widget.RLPInitialized = true
 				local OldSetString = self.loading_widget.SetString
@@ -1784,16 +1787,16 @@ end)
 --Исправление бага с шрифтом в спиннерах
 AddClassPostConstruct("widgets/spinner", function(self, options, width, height, textinfo, ...) --Выполняем подмену шрифта в спиннере из-за глупой ошибки разрабов в этом виджете
 	if textinfo then return end
-	self.text:SetFont(GLOBAL.BUTTONFONT)
+	self.text:SetFont(_G.BUTTONFONT)
 end)
 
 
 --Для тех, кто пользуется ps4 или NACL должна быть возможность сохранять не в ини файле, а в облаке.
 --Для этого дорабатываем функционал стандартного класса PlayerProfile
 local function SetLocalizaitonValue(self,name,value) --Метод, сохраняющий опцию с именем name и значением value
-    local USE_SETTINGS_FILE = GLOBAL.PLATFORM ~= "PS4" and GLOBAL.PLATFORM ~= "NACL"
+    local USE_SETTINGS_FILE = _G.PLATFORM ~= "PS4" and _G.PLATFORM ~= "NACL"
  	if USE_SETTINGS_FILE then
-		GLOBAL.TheSim:SetSetting("translation", tostring(name), tostring(value))
+		_G.TheSim:SetSetting("translation", tostring(name), tostring(value))
 	else
 		self:SetValue(tostring(name), tostring(value))
 		self.dirty = true
@@ -1801,9 +1804,9 @@ local function SetLocalizaitonValue(self,name,value) --Метод, сохраняющий опцию 
 	end
 end
 local function GetLocalizaitonValue(self,name) --Метод, возвращающий значение опции name
-        local USE_SETTINGS_FILE = GLOBAL.PLATFORM ~= "PS4" and GLOBAL.PLATFORM ~= "NACL"
+        local USE_SETTINGS_FILE = _G.PLATFORM ~= "PS4" and _G.PLATFORM ~= "NACL"
  	if USE_SETTINGS_FILE then
-		return GLOBAL.TheSim:GetSetting("translation", tostring(name))
+		return _G.TheSim:GetSetting("translation", tostring(name))
 	else
 		return self:GetValue(tostring(name))
 	end
@@ -1811,11 +1814,11 @@ end
 
 --Расширяем функционал PlayerProfile дополнительной инициализацией двух методов и заданием дефолтных значений опций нашего перевода.
 AddGlobalClassPostConstruct("playerprofile", "PlayerProfile", function(self)
-        local USE_SETTINGS_FILE = GLOBAL.PLATFORM ~= "PS4" and GLOBAL.PLATFORM ~= "NACL"
+        local USE_SETTINGS_FILE = _G.PLATFORM ~= "PS4" and _G.PLATFORM ~= "NACL"
  	if not USE_SETTINGS_FILE then
 	        self.persistdata.update_is_allowed = true --Разрешено запускать обновление по умолчанию
-	        self.persistdata.update_frequency = GLOBAL.RusUpdatePeriod[3] --Раз в неделю по умолчанию
-		local date=GLOBAL.os.date("*t")
+	        self.persistdata.update_frequency = _G.RusUpdatePeriod[3] --Раз в неделю по умолчанию
+		local date=_G.os.date("*t")
 		self.persistdata.last_update_date = tostring(date.day.."."..date.month.."."..date.year) --Текущая дата по умолчанию
 	end
 	self["SetLocalizaitonValue"]=SetLocalizaitonValue --метод задачи значения опции
@@ -1832,7 +1835,7 @@ function AddSettingsButton()
 		for i,v in ipairs(menu_items) do --ищем кнопку "управление", и вставляем после неё "Русификация"
 			if v.text==STRINGS.UI.MAINSCREEN.CONTROLS then
 				local LanguageOptions = require "screens/LanguageOptions"
-				table.insert( menu_items, i+1, {text="Русификация", cb= function() GLOBAL.TheFrontEnd:PushScreen(LanguageOptions()) end})
+				table.insert( menu_items, i+1, {text="Русификация", cb= function() _G.TheFrontEnd:PushScreen(LanguageOptions()) end})
 			end
 		end
 		OldShowMenu(self,menu_items) --Запускаем оригинальную функцию
@@ -1842,7 +1845,7 @@ function AddSettingsButton()
 		--self["ShowMenu"]=NewShowMenu
 		--Переводим рекламу и добавляем рекламу на вики игры
 		if self.motd then
-			self.motd.showwiki=GLOBAL.os.time()%5<3 --появится с вероятностью 3/5=0.6
+			self.motd.showwiki=_G.os.time()%5<3 --появится с вероятностью 3/5=0.6
 			self.motd.OldShow=self.motdShow
 			
 			function motdShow(self)
@@ -1878,7 +1881,7 @@ function AddSettingsButton()
 					self.motdtitle:SetString("Русскоязычная вики")
 					self.motdtext:SetString("Получить подробное описание всего в игре вы можете на русскоязычной вики.")
 					self.button:SetText("Где это?")
-					self.button:SetOnClick( function() GLOBAL.VisitURL("http://ru.dont-starve.wikia.com/wiki/Don%27t_Starve_wiki") end )
+					self.button:SetOnClick( function() _G.VisitURL("http://ru.dont-starve.wikia.com/wiki/Don%27t_Starve_wiki") end )
 				else
 					self.motdtitle:SetString(titlelist[self.motdtitle:GetString()] or self.motdtitle:GetString())
 					self.motdtext:SetString(textlist[self.motdtext:GetString()] or self.motdtext:GetString())
@@ -1892,9 +1895,9 @@ function AddSettingsButton()
 end
   
 --Добавление кнопки настроек меню модов при наведении на русский мод
-if GLOBAL.KnownModIndex and GLOBAL.KnownModIndex.HasModConfigurationOptions then
-	local OldHasModConfigurationOptions = GLOBAL.KnownModIndex.HasModConfigurationOptions
-	function GLOBAL.KnownModIndex:HasModConfigurationOptions(modname, ...)
+if _G.KnownModIndex and _G.KnownModIndex.HasModConfigurationOptions then
+	local OldHasModConfigurationOptions = _G.KnownModIndex.HasModConfigurationOptions
+	function _G.KnownModIndex:HasModConfigurationOptions(modname, ...)
 		local res = OldHasModConfigurationOptions(self, modname, ...)
 		if self:GetModInfo(modname).name==modinfo.name then res = true end
 		return res
@@ -1917,12 +1920,12 @@ AddGlobalClassPostConstruct("screens/modsscreen", "ModsScreen", function(self)
 				self.modlinkbutton2 = self.detailpanel:AddChild(TextButton("images/ui.xml", "blank.tex","blank.tex","blank.tex","blank.tex" ))
 				self.modlinkbutton2:Hide()
 				self.modlinkbutton2:SetPosition(5-78, -119, 0)
-				self.modlinkbutton2:SetFont(GLOBAL.BUTTONFONT)
+				self.modlinkbutton2:SetFont(_G.BUTTONFONT)
 				self.modlinkbutton2:SetTextSize(30)
 				self.modlinkbutton2:SetTextColour(0.9,0.8,0.6,1)
 				self.modlinkbutton2:SetTextFocusColour(1,1,1,1)
 				self.modlinkbutton2:SetText("Мод в SteamWorkshop")
-				self.modlinkbutton2:SetOnClick( function() GLOBAL.VisitURL(t.SteamURL) end )
+				self.modlinkbutton2:SetOnClick( function() _G.VisitURL(t.SteamURL) end )
 			end
 		end
 	end
@@ -1949,9 +1952,9 @@ AddGlobalClassPostConstruct("screens/modsscreen", "ModsScreen", function(self)
 		function self:ConfigureSelectedMod(...)
 			local res = nil
 			local modname = self.modnames[self.currentmod]
-			if GLOBAL.KnownModIndex:GetModInfo(modname).name==modinfo.name then
+			if _G.KnownModIndex:GetModInfo(modname).name==modinfo.name then
 				local LanguageOptions = require "screens/LanguageOptions"
-				GLOBAL.TheFrontEnd:PushScreen(LanguageOptions())
+				_G.TheFrontEnd:PushScreen(LanguageOptions())
 			else
 				res = OldConfigureSelectedMod(self, ...)
 			end
@@ -1964,15 +1967,15 @@ end)
 --Загружает главы из нотабеноида
 local function DownloadNotabenoidChapters()
 --[[	Временно отключили. Нотабеноид не работает!
-	if GLOBAL.RUN_GLOBAL_INIT then --Должно выполняться только при первой загрузке игры
+	if _G.RUN_GLOBAL_INIT then --Должно выполняться только при первой загрузке игры
 		local UpdateRussianDialog = require "screens/UpdateRussianDialog"
-		GLOBAL.TheFrontEnd:PushScreen(UpdateRussianDialog())
+		_G.TheFrontEnd:PushScreen(UpdateRussianDialog())
 	end
 ]]
 end
 
 
-local OldStart = GLOBAL.Start
+local OldStart = _G.Start
 function Start() --После выполнения этой функции уже можно показывать диалоги.
 
 
@@ -1982,26 +1985,26 @@ function Start() --После выполнения этой функции уже можно показывать диалоги.
 
 	--Если включён один из DLC, то нужно применить русификацию реплик персонажей тут
 	if t.ROG_Installed or t.SW_Installed then
-		GLOBAL.TranslateStringTable(GLOBAL.STRINGS)
+		_G.TranslateStringTable(_G.STRINGS)
 	end
 
-	local a=GLOBAL.Profile:GetLocalizaitonValue("update_is_allowed")
+	local a=_G.Profile:GetLocalizaitonValue("update_is_allowed")
 	
 	if not a or a=="true" or a==true then --Если в ini файле есть запись, позволяющая проверять обновления или её вообще нет
-		local period=GLOBAL.Profile:GetLocalizaitonValue("update_frequency")
+		local period=_G.Profile:GetLocalizaitonValue("update_frequency")
 		if not period then --Если нет записи о периоде, то делаем по умолчанию раз в неделю
-			period=GLOBAL.RusUpdatePeriod[3]
-			GLOBAL.Profile:SetLocalizaitonValue("update_frequency",period)
+			period=_G.RusUpdatePeriod[3]
+			_G.Profile:SetLocalizaitonValue("update_frequency",period)
 		end
-		if period==GLOBAL.RusUpdatePeriod[1] then --При каждом запуске
+		if period==_G.RusUpdatePeriod[1] then --При каждом запуске
 			DownloadNotabenoidChapters()
 		end
-		if period~=GLOBAL.RusUpdatePeriod[5] then --если не выбрано "никогда не обновлять"
-			local date=GLOBAL.os.date("*t")
-			local date2=GLOBAL.Profile:GetLocalizaitonValue("last_update_date")
+		if period~=_G.RusUpdatePeriod[5] then --если не выбрано "никогда не обновлять"
+			local date=_G.os.date("*t")
+			local date2=_G.Profile:GetLocalizaitonValue("last_update_date")
 			if date2 then --Получили две даты. Сравниваем в зависимости от установленной частоты обновления
 				date2=string.split(date2,".")
-				if period==GLOBAL.RusUpdatePeriod[2] then --Раз в день
+				if period==_G.RusUpdatePeriod[2] then --Раз в день
 					if date2[1]~=tostring(date.day) then
 						DownloadNotabenoidChapters()
 					end
@@ -2012,11 +2015,11 @@ function Start() --После выполнения этой функции уже можно показывать диалоги.
 					local DaysperMonth={31,a,31,30,31,30,31,31,30,31,30,31}
 					local datedaysum=tonumber(date.year)*365+DaystoMonth[tonumber(date.month)]+tonumber(date.day)
 					local date2daysum=tonumber(date2[3])*365+DaystoMonth[tonumber(date2[2])]+tonumber(date2[1])
-					if period==GLOBAL.RusUpdatePeriod[3] then --Раз в неделю
+					if period==_G.RusUpdatePeriod[3] then --Раз в неделю
 						if datedaysum-7>=date2daysum then
 							DownloadNotabenoidChapters()
 						end
-					elseif period==GLOBAL.RusUpdatePeriod[4] then --Раз в месяц
+					elseif period==_G.RusUpdatePeriod[4] then --Раз в месяц
 						if datedaysum-DaysperMonth[tonumber(date2[2])]>=date2daysum then
 							DownloadNotabenoidChapters()
 						end
@@ -2029,17 +2032,17 @@ function Start() --После выполнения этой функции уже можно показывать диалоги.
 		end
 	end
 end
-GLOBAL.Start=Start
+_G.Start=Start
 
 
 
 --Перехватываем функцию закрытия игры для записи в ини файл данных о том, что можно обновляться
-local oldshutdown=GLOBAL.Shutdown
+local oldshutdown=_G.Shutdown
 function newShutdown()
-	GLOBAL.Profile:SetLocalizaitonValue("update_is_allowed", "true") --Если игра выключена с включённым модом, разрешим в следующий раз проверять обновление
+	_G.Profile:SetLocalizaitonValue("update_is_allowed", "true") --Если игра выключена с включённым модом, разрешим в следующий раз проверять обновление
 	oldshutdown()
 end
-GLOBAL.Shutdown=newShutdown
+_G.Shutdown=newShutdown
 
 
 
@@ -2051,10 +2054,10 @@ GLOBAL.Shutdown=newShutdown
 
 
 --Пробрасываем в настройки каждого мода переменную russian для нативной русификации (при желании автора мода).
-if GLOBAL.ModIndex.InitializeModInfoEnv then
+if _G.ModIndex.InitializeModInfoEnv then
     --Если PeterA услышал мольбы, то поступаем цивилизованно.
-    local old_InitializeModInfoEnv = GLOBAL.ModIndex.InitializeModInfoEnv
-    GLOBAL.ModIndex.InitializeModInfoEnv = function(self,...)
+    local old_InitializeModInfoEnv = _G.ModIndex.InitializeModInfoEnv
+    _G.ModIndex.InitializeModInfoEnv = function(self,...)
         local env = old_InitializeModInfoEnv(self,...)
 		env.language = "ru"
 		env.russian = true -- !!! Устаревшая ссылка. Через некоторое время будет удалена !!!
@@ -2064,8 +2067,8 @@ else --Иначе извращаемся, как обычно.
     local temp_mark = false --Временная метка, означающая, что в следующий вызов RunInEnvironment надо добавить russian=true
    
     --Перехватываем "kleiloadlua", чтобы установить временную метку в случае загрузки "modinfo.lua"
-    local old_kleiloadlua = GLOBAL.kleiloadlua
-    GLOBAL.kleiloadlua = function(path,...)
+    local old_kleiloadlua = _G.kleiloadlua
+    _G.kleiloadlua = function(path,...)
         local fn = old_kleiloadlua(path,...)
         if fn and type(fn) ~= "string" and path:sub(-12) == "/modinfo.lua" then
 			temp_mark = true
@@ -2074,8 +2077,8 @@ else --Иначе извращаемся, как обычно.
     end
    
     --Перехватываем RunInEnvironment, чтобы среагировать на метку (заодно сбросить ее)
-    local old_RunInEnvironment = GLOBAL.RunInEnvironment
-    GLOBAL.RunInEnvironment = function(fn, env, ...)
+    local old_RunInEnvironment = _G.RunInEnvironment
+    _G.RunInEnvironment = function(fn, env, ...)
 		if env and temp_mark then
 			env.language = "ru"
 			env.russian = true -- !!! Устаревшая ссылка. Через некоторое время будет удалена !!!
@@ -2094,7 +2097,7 @@ local genders_reg={"he","he2","she","it","plural","plural2", --numbers
 	he="he",he2="he2",she="she",it="it",plural="plural",plural2="plural2"};
 --[[Функция регистрирует новое имя предмета со всеми данными, необходимыми для его корректного склонения.
 
-    key - Ключ объекта. Например, MYITEM (из GLOBAL.STRINGS.NAMES.MYITEM).
+    key - Ключ объекта. Например, MYITEM (из _G.STRINGS.NAMES.MYITEM).
     val - Русский перевод названия объекта.
     gender - Пол объекта. Варианты: he, he2, she, it, plural, plural2. Род нужен для склонения префиксов жары и влажности.
 	     "he" и "he2" - это мужской род, но не одно и то же, сравните: изучить влажный курган слизнепах (he),
@@ -2116,10 +2119,10 @@ local genders_reg={"he","he2","she","it","plural","plural2", --numbers
 	Вместо пола указана 1, что означает "he".
 	Вместо defaultaction указано 1, что означает повторение val, т.е. "Алхимический двигатель".
 ]]
-function GLOBAL.RegisterRussianName(key,val,gender,walkto,defaultaction,capitalized,killaction)
+function _G.RegisterRussianName(key,val,gender,walkto,defaultaction,capitalized,killaction)
 	local oldval=STRINGS.NAMES[string.upper(key)]
 	STRINGS.NAMES[string.upper(key)]=val
-	GLOBAL.LanguageTranslator.languages.ru["STRINGS.NAMES."..string.upper(key)] = val
+	_G.LanguageTranslator.languages.ru["STRINGS.NAMES."..string.upper(key)] = val
 	if gender and gender~=0 then 
 		if (genders_reg[gender]) then
 			t.NamesGender[genders_reg[gender]][string.lower(key)]=true
