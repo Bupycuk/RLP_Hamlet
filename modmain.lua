@@ -302,6 +302,9 @@ Assets={
 	end
 	if t.SW_Installed then
 		table.insert(Assets,Asset("ATLAS",MODROOT.."images/rus_walani.xml"))
+		table.insert(Assets,Asset("ATLAS",MODROOT.."images/rus_wilbur.xml"))
+		table.insert(Assets,Asset("ATLAS",MODROOT.."images/rus_warly.xml"))
+		table.insert(Assets,Asset("ATLAS",MODROOT.."images/rus_woodlegs.xml"))
 	end
 
 
@@ -1479,6 +1482,9 @@ local function newSelectPortrait(self,portrait)
 		end
 		if t.SW_Installed then
 			list["walani"]=1
+			list["wilbur"]=1
+			list["warly"]=1
+			list["woodlegs"]=1
 		end
 		local name=string.sub(self.heroportait.texture,1,-5)
 		if list[name] then
