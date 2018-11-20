@@ -1,5 +1,5 @@
 name = "Russian Language Pack"
-version = "0.1"
+version = "0.2"
 
 desc = {
 	en = "Temporary machine translation of the Hamlet DLC. Soure code was taken from the Russian Language Pack. Special thanks to Some1 and Alevastor!\n\nVersion: "..version,
