@@ -36,6 +36,7 @@ GetPlayer = _G.GetPlayer
 
 t.ROG_Installed = rawget(_G,"REIGN_OF_GIANTS") and _G.IsDLCEnabled and _G.IsDLCEnabled(_G.REIGN_OF_GIANTS)
 t.SW_Installed = rawget(_G,"CAPY_DLC") and _G.IsDLCEnabled and _G.IsDLCEnabled(_G.CAPY_DLC)
+t.H_Installed = rawget(_G,"PORKLAND_DLC") and _G.IsDLCEnabled and _G.IsDLCEnabled(_G.PORKLAND_DLC)
 
 
 
@@ -305,6 +306,10 @@ Assets={
 		table.insert(Assets,Asset("ATLAS",MODROOT.."images/rus_wilbur.xml"))
 		table.insert(Assets,Asset("ATLAS",MODROOT.."images/rus_warly.xml"))
 		table.insert(Assets,Asset("ATLAS",MODROOT.."images/rus_woodlegs.xml"))
+	end
+	if t.H_Installed then
+		table.insert(Assets,Asset("ATLAS",MODROOT.."images/rus_wilba.xml"))
+		table.insert(Assets,Asset("ATLAS",MODROOT.."images/rus_warbucks.xml"))
 	end
 
 
@@ -1485,6 +1490,10 @@ local function newSelectPortrait(self,portrait)
 			list["wilbur"]=1
 			list["warly"]=1
 			list["woodlegs"]=1
+		end
+		if t.H_Installed then
+			list["wilba"]=1
+			list["warbucks"]=1
 		end
 		local name=string.sub(self.heroportait.texture,1,-5)
 		if list[name] then
